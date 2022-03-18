@@ -1,16 +1,12 @@
+#include "std_lib_facilities.h"
 #include "string"
 #include "iostream"
 #include "stdexcept"
 #include "vector"
 
-//REFAKTORÁLÁS
-
-using namespace std;
-
 class Person{
 	public:
 		Person(){};
-		//Person(string n, int a) : n{n}, a{a} {
 		Person(string f, string l, int a): f{f}, l{l}, a{a} {
 			if(a<0 || a>=150){
 				throw runtime_error("Invalid age");
@@ -23,12 +19,11 @@ class Person{
 			}
 		
 		};
-		//string name() { return n; }
 		string first() {return f;}
 		string last() {return l;}
 		int age() { return a; }
 	private:
-		//string n;
+		
 		string f, l;
 		int a;
 };
@@ -44,10 +39,7 @@ istream & operator>>(istream & is, Person & s){
 
 int main(){
 
- //Person p;
- Person p=Person("Goofy","Fff",63);
- /*p.name="Goofy";
- p.age=63;*/
+ Person p=Person("Goofy","hmm",63);
  cout<<p.first() <<" "<<p.last() <<" "<< p.age() << endl;
 
  Person p2;
@@ -55,7 +47,7 @@ int main(){
  cout<<p2;
 
  vector<Person> vec;
- for(Person p; cin>>p;){  //while(cin>>p)
+ for(Person p; cin>>p;){
  	if(p.first()=="end") break;
  	vec.push_back(p);
  }
