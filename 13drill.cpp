@@ -1,60 +1,70 @@
-
-#include "../Simple_window.h"
-#include "../Graph.h"
-#include <stdlib.h>
-#include <ctime>
+#include "Simple_window.h"
+#include "Graph.h"
 
 
+using namespace Graph_lib;
 
-int main() {
-    using namespace Graph_lib;
-    Simple_window window{ Point{200,200},800,1000,"Simple_window" };
+int main()
+try {
 
+    const Point tl {100, 100};
+    Simple_window win {tl, 800, 1000, "13Drill"};
 
-    int size = 800;
-    int gridSpace = 100;
+    int x_size = 800;
+    int y_size = 800;
+    int x_grid = 100;
+    int y_grid = 100;
+
     Lines grid;
-    for (int i = gridSpace; i <= size; i += gridSpace)
-    {
+    for (int x = x_grid; x < x_size; x += x_grid)
+        grid.add(Point{x, 0}, Point{x, y_size});    
+    for (int y = y_grid; y < y_size; y += y_grid)
+        grid.add(Point{0, y}, Point{x_size, y});
 
-        grid.add(Point{ i,0 }, Point{ i,size });
-        grid.add(Point{ 0,i }, Point{ size,i });
+    grid.set_color(Color::red);
+
+    win.attach(grid);
+    
+    win.wait_for_button();
+
+    Vector_ref<Rectangle> rects;
+    for (int i = 0; i < x_size; i += x_grid) {
+        rects.push_back(new Rectangle{Point{i,i}, Point{i+x_grid,i+x_grid}});
+        rects[rects.size() - 1].set_color(Color::invisible);
+        rects[rects.size() - 1].set_fill_color(Color::red);
+        win.attach(rects[rects.size() - 1]);
     }
-    window.attach(grid);
 
-    vector<Graph_lib::Rectangle*> rectangles;
 
-    for (int i = 0; i < 800; i += 100)
-    {
-        rectangles.push_back(new Graph_lib::Rectangle(Point{ i,i }, Point{ i + 100,i + 100 }));
-        rectangles[rectangles.size() - 1]->set_fill_color(Color::red);
-        window.attach(*rectangles[rectangles.size() - 1]);
-    }
+    Image cpp1 {Point{0,300}, "index.jpg"};
+    Image cpp2 {Point{300,600}, "index.jpg"};
+    Image cpp3 {Point{500,100}, "index.jpg"};
+    cpp1.set_mask(Point{0,0},200,200);
+    cpp2.set_mask(Point{0,0},200,200);
+    cpp3.set_mask(Point{0,0},200,200);
+    win.attach(cpp1);
+    win.attach(cpp2);
+    win.attach(cpp3);
 
-    Image i1{ Point{0,200},"beka.jpg" };
-    window.attach(i1);
-    Image i2{ Point{200,0},"beka.jpg" };
-    window.attach(i2);
-    Image i3{ Point{200,400},"beka.jpg" };
-    window.attach(i3);
-    Image i4{ Point{400,200},"beka.jpg" };
-    window.attach(i4);
-
-    Image i5{ Point{600,600},"beka.jpg" };
-    window.attach(i5);
-    window.wait_for_button();
-
-    int help1 = 600;
-    int help2 = 600;
-    for (int i = 0; i < 10; i++)
-    {
-        
-        srand(time(NULL) * sqrt(help1)); 
-        i5.move(-help1, -help2); 
-        help1 = (rand() % 8) * 100; 
-        help2 = (rand() % 8) * 100;  
-        i5.move(help1, help2);
-        window.wait_for_button();
-    }
-    return 0;
+    Image picture {Point{0,0}, "index.jpg"};
+    picture.set_mask(Point{0,0},100,100);
+    win.attach(picture);
+    win.wait_for_button();
+    
+    for (int i = 0; i < 8; ++i) {   
+        for (int j =0; j < 8; ++j) {
+            picture.move(100, 0);
+            win.wait_for_button();
+        }
+        picture.move(-800, 100);      
+        win.wait_for_button();
+            }
+}
+catch(exception& e) {
+    cerr << "exception: " << e.what() << '\n';
+    return 1;
+}
+catch(...) {
+    cerr << "error\n";
+    return 2;
 }
